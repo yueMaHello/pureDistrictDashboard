@@ -1,0 +1,80 @@
+
+html, body {
+  font-family: 'Roboto', 'Helvetica', sans-serif;
+  background-color: #2D343C;
+  color: #ffffff;
+
+}
+
+.demo-drawer{
+  overflow: hidden;
+  width:400px;
+  border: none;
+  background-color: #2D343C;
+  z-index:99;
+  border-right: 1px solid white;
+}
+.demo-layout .mdl-layout__header .mdl-layout__drawer-button {
+  color: rgba(0, 0, 0, 0.54);
+
+}
+
+.mdl-layout__header-row{
+  background-color: #2D343C;
+}
+
+.row{
+  background-color: #2D343C;
+}
+.demo-navigation .mdl-navigation__link .material-icons {
+  font-size: 24px;
+  margin-right: 32px;
+}
+.mdl-layout__content{
+  left:160px;
+
+}
+h3{
+  margin-top:-6px;
+  font-size:20px;
+  color: #ffffff;
+}
+#mapDiv {
+  height: 600px;
+  width:90%;
+}
+#title{
+  color: #ffffff;
+  left:45%;
+  font-size:33px;
+}
+hr{
+  margin-left:-20px;
+  width:700px;
+}
+
+.column{
+  position:fixed;
+  width:1200px;
+  height:80%;
+  border-right: 1px solid white;
+  z-index:99
+
+}
+hr{
+  margin-top:94px;
+}
+
+.vchartGroup{
+  height:350px;
+  border-top:1px solid white;
+  border-right: 1px solid white;
+}
+.hchartGroup{
+  height:45%
+
+}
+li {
+  overflow: auto;
+  white-space: nowrap;
+}

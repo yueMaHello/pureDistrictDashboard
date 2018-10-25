@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+<title>District Dashboard</title>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js'></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
+
+    <!------ Include the above in your HEAD tag ---------->
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Material Design Lite">
+
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&lang=en">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.cyan-light_blue.min.css">
+<link rel="stylesheet" href="./stylesheets/style.css">
+<link rel="stylesheet" href="https://js.arcgis.com/3.26/esri/css/esri.css">
+<script src="https://js.arcgis.com/3.26/"></script>
+
+</head>
+<body>
+<div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
+<header class="demo-header">
+    <div class="mdl-layout__header-row">
+        <span class="mdl-layout-title" id = 'title'>District Dashboard</span>
+        <div class="mdl-layout-spacer"></div>
+
+        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
+            <i class="material-icons">more_vert</i>
+        </button>
+        <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
+            <li class="mdl-menu__item">About</li>
+            <li class="mdl-menu__item">Contact</li>
+            <li class="mdl-menu__item">Legal information</li>
+        </ul>
+    </div>
+</header>
+<div class="demo-drawer mdl-layout__drawer">
+    <div class="column">
+        <div class="col-sm-4 hchartGroup">
+
+            <h3>Income</h3>
+            <canvas class = 'hchart' id="piechart"></canvas>
+            <hr>
+        </div>
+
+        <div class="col-sm-4 hchartGroup">
+            <h3>Auto&nbspOwnership</h3>
+            <canvas class = 'hchart' id="piechart1"></canvas>
+            <hr>
+        </div>
+        <div class="col-sm-4 hchartGroup">
+            <h3>Travel&nbspMode</h3>
+            <canvas class = 'hchart' id="piechart2"></canvas>
+            <!--<hr style="width: 1px; height: 20px; display: inline-block;">-->
+            <!--<hr style="width: 1px; height: 10px; display: inline; margin-left: 2px; margin-right: 2px;" />-->
+        </div>
+    </div>
+</div>
+<div class="mdl-layout__content">
+    <div class="mdl-grid demo-content">
+
+        <div id = 'mapDiv'></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 vchartGroup">
+                <h3>Column 1</h3>
+                <canvas class = 'hchart' id="piechart3"></canvas>
+            </div>
+            <div class="col-sm-4 vchartGroup">
+                <h3>Column 2</h3>
+                <canvas id="lineChart"></canvas>
+            </div>
+            <div class="col-sm-4 vchartGroup">
+                <h3>Column 3</h3>
+                <div class = "Population">
+                    <li>Population: <a id = 'PopulationNumber'></a></li>
+                </div>
+                <div class = "Employment">
+                    <li>Employment: <a id = 'EmploymentNumber'></a></li>
+                </div>
+                <div class = "TotalVKT">
+                    <li>Total Vehicle Travel Distance: <a id = 'TotalVKTNumber'></a><a>km</a></li>
+                </div>
+                <div class = "AverageVKT">
+                    <li>Average Vehicle Travel Distance Per Trip: <a id = 'AverageVKTNumber'></a><a>km</a></li>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+
+<script src="javascripts/main.js"></script>
+
+
+</body>
+</html>
