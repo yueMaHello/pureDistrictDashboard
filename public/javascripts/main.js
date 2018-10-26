@@ -13,7 +13,7 @@ var data = {
     'populationMatrix':null,
     'employmentMatrix':null
 
-}
+};
 var q = d3.queue();
 q.defer(d3.csv,'./data/income_by_district.csv')
     .defer(d3.csv,'./data/autoOwnerShip_by_district.csv')
@@ -42,24 +42,28 @@ var randomColorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
     '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680'];
 
 require([
-    "esri/map",
+    "esri/map",  "dojo/dom-construct",
     "esri/layers/FeatureLayer",
-    "esri/dijit/PopupTemplate",
-    "esri/dijit/Legend",
+    "esri/dijit/Popup",
+    "esri/dijit/Legend","esri/symbols/SimpleLineSymbol","esri/InfoTemplate",
     "dojo/domReady!"
-], function(Map, FeatureLayer, PopupTemplate, Legend
+], function(Map, domConstruct,FeatureLayer, Popup, Legend,SimpleLineSymbol,InfoTemplate
 ) {
+
 
     var map = new Map("mapDiv", {
         basemap: "gray-vector",
         center: [-113.4909, 53.5444],
         zoom: 8,
         minZoom:6,
+
     });
 
     var districtLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/district1669/FeatureServer/0",{
         mode: FeatureLayer.MODE_SNAPSHOT,
         outFields: ["*"],
+        infoTemplate:new InfoTemplate("Attributes", "${*}")
+
 
     });
     //LRT layer
