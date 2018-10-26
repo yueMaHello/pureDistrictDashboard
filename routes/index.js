@@ -13,11 +13,10 @@ function walkfolders(dir) {
     });
     return filelist;
 }
-var csvFileList = walkfolders('./public/ss');
-var appName = csvFileList[0].split('.csv')[0];
+
 
 router.get('/', function(req, res, next) {
-    res.render('index', { title: appName});
+    res.render('index', { title: ''});
 });
 
 module.exports = router;
