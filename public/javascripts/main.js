@@ -1,9 +1,3 @@
-var button = document.createElement('button');
-var textNode = document.createTextNode('Click Me!');
-button.appendChild(textNode);
-button.className = 'mdl-button mdl-js-button mdl-js-ripple-effect';
-componentHandler.upgradeElement(button);
-
 var data = {
     'incomeMatrix':null,
     'autoOwnerShipMatrix':null,
@@ -12,7 +6,6 @@ var data = {
     'averageVKTMatrix':null,
     'populationMatrix':null,
     'employmentMatrix':null
-
 };
 var q = d3.queue();
 q.defer(d3.csv,'./data/income_by_district.csv')
@@ -42,29 +35,24 @@ var randomColorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
     '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680'];
 
 require([
-    "esri/map",  "dojo/dom-construct",
+    "esri/map","dojo/dom-construct",
     "esri/layers/FeatureLayer",
     "esri/dijit/Popup",
     "esri/dijit/Legend","esri/symbols/SimpleLineSymbol","esri/InfoTemplate",
     "dojo/domReady!"
 ], function(Map, domConstruct,FeatureLayer, Popup, Legend,SimpleLineSymbol,InfoTemplate
 ) {
-
-
     var map = new Map("mapDiv", {
         basemap: "gray-vector",
         center: [-113.4909, 53.5444],
         zoom: 8,
         minZoom:6,
-
     });
 
     var districtLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/district1669/FeatureServer/0",{
         mode: FeatureLayer.MODE_SNAPSHOT,
         outFields: ["*"],
         infoTemplate:new InfoTemplate("Attributes", "${*}")
-
-
     });
     //LRT layer
     var lrtFeatureLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/LRT/FeatureServer/0",{
@@ -79,16 +67,13 @@ require([
     var incomeChart;
     var modeChart;
     var autoChart;
-
-
     districtLayer.on('click',function(e){
         let selectedZone;
         selectedZone = e.graphic.attributes["District"];
         var incomeLine = data.incomeMatrix[selectedZone];
         var autoLine = data.autoOwnerShipMatrix[selectedZone];
         var modeLine = data.districtMatrix[selectedZone];
-        // Draw the chart and set the chart values
-        // Load google charts
+        // Fill census values
         $('#TotalVKTNumber').text(Number(data.totalVKTMatrix[selectedZone]['TotalVKT']).toFixed(2));
         $('#AverageVKTNumber').text(Number(data.averageVKTMatrix[selectedZone]['AverageVKT']).toFixed(2));
         $('#PopulationNumber').text(data.populationMatrix[selectedZone]['Population']);
@@ -182,7 +167,7 @@ function drawChart(incomeLine,autoLine,modeLine) {
     var modeCtxL = document.getElementById("piechart2").getContext('2d');
     modeChart = new Chart(modeCtxL, {
         type: 'bar',
-        data:modeData,
+        data: modeData,
         options: {
             responsive: true,
             legend: {
@@ -197,8 +182,6 @@ function drawChart(incomeLine,autoLine,modeLine) {
 }
 function buildMatrixLookup(arr) {
     var lookup = {};
-    //var indexCol = arr[0]
-    //console.log(indexCol);
     arr.forEach(row => {
         let ind = row["District"];
         delete row["District"];
