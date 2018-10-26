@@ -1,3 +1,4 @@
+//store all the data in json format
 var data = {
     'incomeMatrix':null,
     'autoOwnerShipMatrix':null,
@@ -7,17 +8,18 @@ var data = {
     'populationMatrix':null,
     'employmentMatrix':null
 };
-var q = d3.queue();
-q.defer(d3.csv,'./data/income_by_district.csv')
+
+//read csv one by one
+d3.queue().defer(d3.csv,'./data/income_by_district.csv')
     .defer(d3.csv,'./data/autoOwnerShip_by_district.csv')
     .defer(d3.csv,'./data/mode_by_district.csv')
     .defer(d3.csv,"./data/totalVKT_by_district.csv")
     .defer(d3.csv, './data/averageVKT_by_district.csv')
     .defer(d3.csv,'./data/population_by_district.csv')
     .defer(d3.csv,'./data/employment_by_district.csv')
-    .await(main);
-
-function main(error,income,autoOwnership,district,totalVKT,averageVKT,population,employment){
+    .await(storeData);
+//convert csv data into json format
+function storeData(error,income,autoOwnership,district,totalVKT,averageVKT,population,employment){
     data.incomeMatrix = buildMatrixLookup(income);
     data.autoOwnerShipMatrix = buildMatrixLookup(autoOwnership);
     data.districtMatrix = buildMatrixLookup(district);
@@ -26,6 +28,7 @@ function main(error,income,autoOwnership,district,totalVKT,averageVKT,population
     data.populationMatrix = buildMatrixLookup(population);
     data.employmentMatrix = buildMatrixLookup(employment);
 }
+//chartJS needs us to provide color pattern. I just create a random color array as pattern
 var randomColorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
     '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
     '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A',
@@ -33,7 +36,11 @@ var randomColorArray = ['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
     '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC',
     '#66664D', '#991AFF', '#E666FF', '#4DB3FF', '#1AB399',
     '#E666B3', '#33991A', '#CC9999', '#B3B31A', '#00E680'];
-
+//store charts
+var incomeChart;
+var modeChart;
+var autoChart;
+//load Arcgis library
 require([
     "esri/map","dojo/dom-construct",
     "esri/layers/FeatureLayer",
@@ -64,34 +71,32 @@ require([
         map.addLayer(districtLayer);
         map.addLayer(lrtFeatureLayer);
     });
-    var incomeChart;
-    var modeChart;
-    var autoChart;
+    //add onclick event of district layer
     districtLayer.on('click',function(e){
-        let selectedZone;
-        selectedZone = e.graphic.attributes["District"];
-        var incomeLine = data.incomeMatrix[selectedZone];
-        var autoLine = data.autoOwnerShipMatrix[selectedZone];
-        var modeLine = data.districtMatrix[selectedZone];
-        // Fill census values
+        let selectedZone=e.graphic.attributes["District"];//get selected zone
+        // Fill census values of the selected zone
         $('#TotalVKTNumber').text(Number(data.totalVKTMatrix[selectedZone]['TotalVKT']).toFixed(2));
         $('#AverageVKTNumber').text(Number(data.averageVKTMatrix[selectedZone]['AverageVKT']).toFixed(2));
         $('#PopulationNumber').text(data.populationMatrix[selectedZone]['Population']);
         $('#EmploymentNumber').text(data.employmentMatrix[selectedZone]['Jobs']);
         // Draw the chart and set the chart values
-        drawChart(incomeLine,autoLine,modeLine);
+        drawChart(selectedZone);
 
     })
 });
-
-function drawChart(incomeLine,autoLine,modeLine) {
+//renew the chart based on the selected zone
+function drawChart(selectedZone) {
+    let incomeLine = data.incomeMatrix[selectedZone]; //read income info for the selected zone
+    let autoLine = data.autoOwnerShipMatrix[selectedZone];//read auto info for the selected zone
+    let modeLine = data.districtMatrix[selectedZone];//read mode info for the selected zone
+    //if there are charts already generated, just destroy them
     if(typeof(incomeChart)!=='undefined'){
         incomeChart.destroy();
         modeChart.destroy();
         autoChart.destroy();
     }
-
-    var incomeArray = new Array();
+    //generate the income chart
+    var incomeArray = [];
     for (var key in incomeLine) {
         incomeArray.push([key,parseFloat(incomeLine[key])]);
     }
@@ -103,7 +108,6 @@ function drawChart(incomeLine,autoLine,modeLine) {
         }],
         labels:k,
     };
-
     var incomeCtxL = document.getElementById("piechart").getContext('2d');
     incomeChart = new Chart(incomeCtxL, {
         type: 'pie',
@@ -116,12 +120,10 @@ function drawChart(incomeLine,autoLine,modeLine) {
                 labels: {
                     fontColor: 'white'
                 }
-            },
-            responsive: true
-
+            }
         }
     });
-
+    //generate the auto ownership chart
     var autoArray = new Array();
     for (var key in autoLine) {
         autoArray.push([key,parseFloat(autoLine[key])]);
@@ -135,7 +137,6 @@ function drawChart(incomeLine,autoLine,modeLine) {
         }],
         labels:k,
     };
-
     var autoCtxL = document.getElementById("piechart1").getContext('2d');
     autoChart = new Chart(autoCtxL, {
         type: 'doughnut',
@@ -151,7 +152,7 @@ function drawChart(incomeLine,autoLine,modeLine) {
             }
         }
     });
-
+    //generate travel mode chart
     var modeArray = new Array();
     for (var key in modeLine) {
         modeArray.push([key,parseFloat(modeLine[key])]);
@@ -180,6 +181,7 @@ function drawChart(incomeLine,autoLine,modeLine) {
         }
     });
 }
+//convert csv data into our desired json format
 function buildMatrixLookup(arr) {
     var lookup = {};
     arr.forEach(row => {
@@ -190,6 +192,7 @@ function buildMatrixLookup(arr) {
 
     return lookup;
 }
+//seperate an object into a list of values and a list of keys
 function getKeysValuesOfObject(obj){
     var keys = [];
     var values = [];
