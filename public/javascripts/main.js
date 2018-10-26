@@ -123,6 +123,7 @@ function drawChart(selectedZone) {
             }
         }
     });
+
     //generate the auto ownership chart
     var autoArray = new Array();
     for (var key in autoLine) {
@@ -139,12 +140,12 @@ function drawChart(selectedZone) {
     };
     var autoCtxL = document.getElementById("piechart1").getContext('2d');
     autoChart = new Chart(autoCtxL, {
-        type: 'doughnut',
+        type: 'bar',
         data:autoData,
         options: {
             responsive: true,
             legend: {
-                display: true,
+                display: false,
                 position: 'right',
                 labels: {
                     fontColor: 'white'
