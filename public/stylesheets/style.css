@@ -3,78 +3,120 @@ html, body {
   font-family: 'Roboto', 'Helvetica', sans-serif;
   background-color: #2D343C;
   color: #ffffff;
-
+  height: 100%; padding: 0; margin: 0;
 }
 
-.demo-drawer{
-  overflow: hidden;
-  width:400px;
-  border: none;
-  background-color: #2D343C;
-  z-index:99;
-  border-right: 1px solid white;
-}
-.demo-layout .mdl-layout__header .mdl-layout__drawer-button {
-  color: rgba(0, 0, 0, 0.54);
+#div1 { background: #ffffff;width: 100%; height: 65%; float: left;}
+#div2 { background: #ffffff;width: 100%; height: 35%; float: left; }
 
-}
 
-.mdl-layout__header-row{
-  background-color: #2D343C;
+#verticalCharts{ background: #ffffff;width: 20%; height: 100%; float: left;}
+#mapZone{ background: dimgrey;width: 80%; height: 100%; float: left;}
+
+
+#chart1{
+  width:100%;
+  height:50%;
+  background: #ffffff
 }
 
-.row{
-  background-color: #2D343C;
+#chart2{
+  width:100%;
+  height:50%;
+  background: #ffffff;
 }
-.demo-navigation .mdl-navigation__link .material-icons {
-  font-size: 24px;
-  margin-right: 32px;
+#chart3{
+  float: left;
+  width:20%;
+  height:100%;
+  background: #ffffff;
 }
-.mdl-layout__content{
-  left:160px;
-
+#chart4{
+  float: left;
+  width:20%;
+  height:100%;
+  background: #ffffff;
 }
-h3{
-  margin-top:-6px;
-  font-size:20px;
-  color: #ffffff;
+#chart5{
+  float: left;
+  width:20%;
+  height:100%;
+  background: #ffffff;
 }
-#mapDiv {
-  height: 600px;
-  width:90%;
+#chart6{
+  float: left;
+  width:20%;
+  height:100%;
+  background: #ffffff;
+}
+#chart7{
+  float: left;
+  width:20%;
+  height:100%;
+  background: #ffffff;
 }
 #title{
-  color: #ffffff;
-  left:45%;
-  font-size:33px;
+
+  height:10%;
+  width: 100%;
 }
-hr{
-  margin-left:-20px;
-  width:700px;
+#mapDiv{
+  height:90%;
+  width:100%;
+}
+#titleText{
+  position:absolute;
+  left:54%;
+  text-align: center;
+  font-size:23px;
+}
+/* Clear floats after the columns */
+#age,#income,#HHSize,#mode,#autoOwnership,#bulletCharts,#dwelling,#tripsByPurpose{
+  height:99%;
+  width: 99%;
+}
+#avgDist,#avgGHG,#totalEmp,#totalPop {
+  margin-right:0px;
+  width: 97%;
+}
+div.subchart {
+  float:left;
+  border-radius: 4px;
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.53);
+  border: solid 1px #e1e1e1;
 }
 
-.column{
-  position:fixed;
-  width:1200px;
-  height:80%;
-  border-right: 1px solid white;
-  z-index:99
+#testDiv{
+  z-index:1000;
+  position:absolute;
+  top:70px;
+  left:130px;
+  display: none;
+  width: 200px;
+  height: 50px;
+  background-color:#999999
+}
+#changeMode{
+    z-index:1000;
+    position:absolute;
+    height:25px;
+    margin-top:10px;
+    margin-left:10px;
+}
+.back{
+  position:absolute;
+  margin-top:-300px;
+  margin-left:10px;
+  z-index:1000;
+}
+#tour{
+  border-radius: 25px;
+  border: 2px solid #000000;
+  padding: 10px;
+  z-index:100;
+  position:absolute;
+  top:15px;
+  right:10px;
+  cursor:pointer;
 
-}
-hr{
-  margin-top:94px;
-}
-
-.vchartGroup{
-  height:350px;
-  border-top:1px solid white;
-  border-right: 1px solid white;
-}
-.hchartGroup{
-  height:45%
-
-}
-li {
-  overflow: auto;
-  white-space: nowrap;
 }

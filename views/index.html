@@ -6,103 +6,82 @@
 <meta name="description" content="A front-end template that helps you build fast, modern mobile web apps.">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
 <title>District Dashboard</title>
-<link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-    <script src = 'https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.min.js'></script>
+<input id='tour' type="button" value='Take A Tour'>
+<link href="./externalStylesheet/introjs.css" rel="stylesheet">
+<link href="./externalStylesheet/introjs-modern.css" rel="stylesheet">
+<script src="./externalJS/intro.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+<!--<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>-->
+
 <script src="https://d3js.org/d3.v4.min.js"></script>
-
-    <!------ Include the above in your HEAD tag ---------->
-<meta name="mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black">
-<meta name="apple-mobile-web-app-title" content="Material Design Lite">
-
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:regular,bold,italic,thin,light,bolditalic,black,medium&lang=en">
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.cyan-light_blue.min.css">
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/bullet.js"></script>
+<script src="https://code.highcharts.com/modules/drilldown.js"></script>
 <link rel="stylesheet" href="./stylesheets/style.css">
 <link rel="stylesheet" href="https://js.arcgis.com/3.26/esri/css/esri.css">
+<script src="https://code.highcharts.com/modules/variable-pie.js"></script>
 <script src="https://js.arcgis.com/3.26/"></script>
-
+<link rel="shortcut icon" href="">
 </head>
 <body>
-<div class="demo-layout mdl-layout mdl-js-layout mdl-layout--fixed-drawer mdl-layout--fixed-header">
-<header class="demo-header">
-    <div class="mdl-layout__header-row">
-        <span class="mdl-layout-title" id = 'title'>District Dashboard</span>
-        <div class="mdl-layout-spacer"></div>
 
-        <button class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon" id="hdrbtn">
-            <i class="material-icons">more_vert</i>
-        </button>
-        <ul class="mdl-menu mdl-js-menu mdl-js-ripple-effect mdl-menu--bottom-right" for="hdrbtn">
-            <li class="mdl-menu__item">About</li>
-            <li class="mdl-menu__item">Contact</li>
-            <li class="mdl-menu__item">Legal information</li>
-        </ul>
+
+<!--If you want to move charts' positions, you should simply move the div in class 'subchart'.
+ For example, if you want to exchange the '<div class='subchart' id=tripsByPurpose></div>' with the '<div class='subchart' id ='mode'></div>',
+ then you can refresh the webpage through clicking 'ctrl+F5'. You will notice the first two charts exchanged their positions with each other-->
+<div id="div1">
+    <div id="verticalCharts">
+        <div id="chart1">
+            <div class='subchart' id = 'tripsByPurpose'></div>
+
+
+        </div>
+        <div id="chart2">
+            <button class='subchart' type="button" class="btn btn-primary" id="changeMode">Change View</button>
+            <div class='subchart' id = 'mode'></div>
+
+        </div>
     </div>
-</header>
-<div class="demo-drawer mdl-layout__drawer">
-    <div class="column">
-        <div class="col-sm-4 hchartGroup">
 
-            <h3>Income</h3>
-            <canvas class = 'hchart' id="piechart"></canvas>
-            <hr>
+    <div id="mapZone">
+        <div id = title>
+            <p id="titleText">District Dashboard</p>
         </div>
-
-        <div class="col-sm-4 hchartGroup">
-            <h3>Auto&nbspOwnership</h3>
-            <canvas class = 'hchart' id="piechart1"></canvas>
-            <hr>
-        </div>
-        <div class="col-sm-4 hchartGroup">
-            <h3>Travel&nbspMode</h3>
-            <canvas class = 'hchart' id="piechart2"></canvas>
-            <!--<hr style="width: 1px; height: 20px; display: inline-block;">-->
-            <!--<hr style="width: 1px; height: 10px; display: inline; margin-left: 2px; margin-right: 2px;" />-->
-        </div>
+        <div id="mapDiv"></div>
     </div>
 </div>
-<div class="mdl-layout__content">
-    <div class="mdl-grid demo-content">
+<div id="div2">
+    <div id="chart3">
+        <div class="subchart" id="bulletCharts">
+            <div id="avgDist"></div>
+            <div id="avgGHG"></div>
+            <div id="totalEmp"></div>
+            <div id="totalPop"></div>
+        </div>
 
-        <div id = 'mapDiv'></div>
-        </div>
-        <div class="row">
-            <div class="col-sm-4 vchartGroup">
-                <h3>Column 1</h3>
-                <canvas class = 'hchart' id="piechart3"></canvas>
-            </div>
-            <div class="col-sm-4 vchartGroup">
-                <h3>Column 2</h3>
-                <canvas id="lineChart"></canvas>
-            </div>
-            <div class="col-sm-4 vchartGroup">
-                <h3>Census</h3>
-                <div class = "Population">
-                    <li>Population: <a id = 'PopulationNumber'></a></li>
-                </div>
-                <div class = "Employment">
-                    <li>Employment: <a id = 'EmploymentNumber'></a></li>
-                </div>
-                <div class = "TotalVKT">
-                    <li>Total Vehicle Travel Distance: <a id = 'TotalVKTNumber'></a><a>km</a></li>
-                </div>
-                <div class = "AverageVKT">
-                    <li>Average Vehicle Travel Distance Per Trip: <a id = 'AverageVKTNumber'></a><a>km</a></li>
-                </div>
-            </div>
-        </div>
+    </div>
+    <div id="chart4">
+        <div class='subchart' id = 'dwelling'></div>
+    </div>
+    <div id="chart5">
+        <div class='subchart' id = 'autoOwnership'></div>
+    </div>
+    <div id="chart6">
+        <div class='subchart' id = 'HHSize'></div>
+    </div>
+    <div id="chart7">
+        <div class='subchart' id = 'income'></div>
     </div>
 </div>
 
-
-
-<script src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+<div id="testDiv" >
+    There is no trip data of your selected zone.
+</div>
 
 <script src="javascripts/main.js"></script>
 
