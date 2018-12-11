@@ -116,7 +116,7 @@ function callback(line){
     if(!Number(line[0])){
         return
     }
-    let thisDict = zoneToDistrict[line[6]]
+    let thisDict = zoneToDistrict[line[6]];
     data[thisDict]['Person#'][line[18]] += parseFloat(line[3]);
     data[thisDict]['Mode'][line[14]] += 1;
     data[thisDict]['TourPurp'][line[18]] += 1;

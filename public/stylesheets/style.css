@@ -102,12 +102,21 @@ div.subchart {
     height:25px;
     margin-top:10px;
     margin-left:10px;
+    background-color: #ffffff; color: black;
+  /*border:1;*/
+  text-align: center;
+  text-decoration: none;
+
 }
 .back{
   position:absolute;
   margin-top:-300px;
   margin-left:10px;
   z-index:1000;
+  background-color: #ffffff;
+  /*border:1;*/
+  text-align: center;
+  text-decoration: none;
 }
 #tour{
   border-radius: 25px;

@@ -176,7 +176,7 @@ require([
             yAxis: {
                 min: 0,
                 title: {
-                    text: 'Amount',
+                    text: 'Total',
                 },
                 labels: {
                     overflow: 'justify'
@@ -200,7 +200,7 @@ require([
                 enabled: false
             },
             series: [{
-                name:'Amount',
+                name:'Total',
                 type: 'column',
                 data:  '',
                 showInLegend: false
@@ -220,7 +220,7 @@ require([
                 categories: []
             },
             series: [{
-                name:'Amount',
+                name:'Total',
                 type: 'column',
                 colorByPoint: true,
                 data: [],
@@ -271,8 +271,8 @@ require([
                 }
             },
             tooltip: {
-                headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
-                pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:0.2f}%</b> of total<br/>'
+
+                pointFormat: '<b>{point.y:0.2f}%</b> of total<br/>'
             },
             series: [
                 {
@@ -299,11 +299,11 @@ require([
             },
             tooltip: {
                 headerFormat: '<span style="font-size:11px">{point.name}</span><br>',
-                pointFormat: '<span style="color:{point.color}">Amount</span>: <b>{point.y}</b><br/>'
+                pointFormat: '<span style="color:{point.color}">Total</span>: <b>{point.y}</b><br/>'
             },
             yAxis: {
                 title: {
-                    text:'Amount'
+                    text:'Total'
                 }
             },
             legend: {
@@ -658,7 +658,7 @@ function updateBulletChart(){
                 },
                 tooltip: {
                     headerFormat: '<span style="font-size:11px">{point.name}</span><br>',
-                    pointFormat: '<span style="color:{point.color}">Amount</span>: <b>{point.y:0.2f}</b><br/>'
+                    pointFormat: '<span style="color:{point.color}">Total</span>: <b>{point.y:0.2f}</b><br/>'
                 },
                 legend: {
                     enabled: false
@@ -678,7 +678,6 @@ function updateBulletChart(){
                     }
                 }]
             });
-            //<rect fill="#f7f7f7" class='highcharts-button-box' x='0.5' y='0.5' width='44' height='34' rx='2' ry='2' stroke='#cccccc' stroke-width="1"></rect>
             //add click label event to the dist by purpose chart
             //if the user clicks on this drillDownDistChart's labels, the updateBulletChart function will be called again.
             //it is a self-perpetuate feature
@@ -764,7 +763,7 @@ function updateBulletChart(){
     });
     //add drilldown event to the label of the chart
     ghgChart.xAxis[0].labelGroup.element.childNodes.forEach(function(label)
-    {   console.log(1111)
+    {
         label.style.cursor = "pointer";
         label.onclick = function() {
             $('#avgGHG').show();
@@ -825,14 +824,6 @@ function updateBulletChart(){
                 $("#backButton").remove();
                 updateBulletChart()
             })
-
-
-            // //add back to original event to the chart's label
-            // drillDownGHGChart.xAxis[0].labelGroup.element.childNodes.forEach(function(label)
-            // {
-            //     label.style.cursor = "pointer";
-            //     label.onclick = function() {updateBulletChart()}
-            // })
         }
     });
     //add drill down event
@@ -941,8 +932,6 @@ function updateBulletChart(){
         }
     });
     //add drill down event
-
-
     totalPop.xAxis[0].labelGroup.element.childNodes.forEach(function(label)
     {
         label.style.cursor = "pointer";
@@ -978,9 +967,7 @@ function updateBulletChart(){
                                 color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black'
                             },
                             textOverflow: 'clip'
-
                         },
-
                     }
                 },
                 //Hard coding part. If your data structure change, you will have to change this part of code
@@ -1067,6 +1054,8 @@ function getKeysValuesOfObject(obj){
     return [keys,values];
 }
 //convert csv data into desirable json format
+//the DwellilngType_2015_RTM3.csv, Population_2015_RTM3.csv, and RTM3_Emp_2015.csv are all about travel zone
+//You should use DistrictVSZone.csv file to convert travel zone level to district level
 function convertCSVData(popEmpDataset,zoneToDistrict) {
     let TAZTitle = 'TAZ1669';
     let tmpData = {};
@@ -1088,9 +1077,10 @@ function convertCSVData(popEmpDataset,zoneToDistrict) {
             tmpData[district] = result
         }
     }
-    console.log(tmpData);
+
     return tmpData
 }
+//read zone and district information to a dictionary. It will have this format: {'TravelZone':'District'}
 function getZoneToDistrict(DistrictVSZonesDataset){
     let zoneTodistrictDict = {};
     for(let k in DistrictVSZonesDataset){
@@ -1126,9 +1116,6 @@ function getCategoriesOfDistByPurp(distPurpArray){
         return result
     }
 }
-
-
-
 $('#tour').on('click',function(e){
     let intro1 = introJs();
     intro1.setOptions({
