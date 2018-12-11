@@ -1,5 +1,6 @@
-# Travel Zone Dashboard
-This is a Nodejs web application using Arcgis Javascript API. It displays a dynamic dashboard. When the user clicks on a travel zone, the charts will change correspondingly. Highcharts.js is used to draw various kinds of charts.
+# District Dashboard
+This is a Nodejs web application using Arcgis Javascript API. It displays a dynamic dashboard. When the user clicks on a district zone, the charts will change correspondingly. Highcharts.js is used to draw various kinds of charts.
+This application is almost the same as the Travel Zone Dashboard. They use the same dataset and the same UI. But the District Dashboard does a post-process to convert data from travel zone level to district level.
 ## Set Up:
 #### From Github:
 1. If you haven't downloaded Nodejs on your computer, you need to download it and add it into PATH.
