@@ -11,6 +11,8 @@ let dwellingTypeDataset; //store ./data/DwellingType_2015_RTM3.csv
 let selectedZone = '1';//store the zone being selected, default zone is '101'
 let professionalTravelModeChart = false;
 let selectedDistrictLayer;
+//attribute.District. If you change the district layer's attribute name, this variable should be changed correspondingly
+let districtLayerAttributeID = 'District';
 // let zoneToDistrict;
 //If trips_1.csv uses other categories (not 'P','C','W'....'S'), the dictionary should be edited correspondingly
 let purposeDict = {
@@ -21,7 +23,7 @@ let purposeDict = {
     'H':'Shop',
     'R':'Recreation',
     'Q':'Quick Stop',
-    'S':'School'
+    'S':'School',
 };
 //If trips_1.csv uses other categories (not 'Lo','Med','Hi'), the dictionary should be edited correspondingly
 let incomeDict = {
@@ -92,7 +94,7 @@ require([
 
         //add onclick event of district layer
         DistrictLayer.on('click',function(e){
-            selectedZone = e.graphic.attributes["District"];//get selected zone
+            selectedZone = e.graphic.attributes[districtLayerAttributeID];//get selected zone
             // Draw the chart and set the chart values
             drawChart(selectedZone);
             if(selectedDistrictLayer){
@@ -1121,14 +1123,10 @@ $('#tour').on('click',function(e){
     intro1.setOptions({
         tooltipPosition : 'bottom',
         steps: [
-            {
-                element: '#title',
-                intro: 'Welcome to District Dashboard! You could get trip and household information about each district.',
-                position: 'top'
-            },
+
             {
                 element: '#mapDiv',
-                intro: 'Please click on a district. If there is no data of that district, please try another district.',
+                intro: 'Welcome to the District Dashboard! Please click on a district. If there is no data of that district, please try another district.',
                 position: 'top'
             },
             {
@@ -1141,6 +1139,7 @@ $('#tour').on('click',function(e){
                 intro: 'Travel mode could switch between two set of categories. The data set is the same.',
                 position: 'top'
             },
+
             {
                 element: '#avgDist',
                 intro: 'Again, try to click on a blue label!',
