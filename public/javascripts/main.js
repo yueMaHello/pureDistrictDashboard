@@ -39,20 +39,23 @@ require([
 ], function(Map, domConstruct,FeatureLayer, Popup, Legend,SimpleLineSymbol,InfoTemplate,SimpleFillSymbol,ClassBreaksRenderer,SimpleMarkerSymbol,GraphicsLayer,Graphic,Color
 ) {
     //D3 read json and csv files
+
     d3.queue().defer(d3.json,'./outputData/output.json')
               .defer(d3.csv,'./data/RTM3_Emp_2015.csv')
               .defer(d3.csv,'./data/Population_2015_RTM3.csv')
               .defer(d3.csv,'./data/DwellingType_2015_RTM3.csv')
               .defer(d3.csv,'./data/DistrictVSZone.csv')
               .await(loadData);
+
     //after read the data, call loadData.
     function loadData(error,outputData,popEmpData,popBreak,dwellingData,DistrictVSZone){
+
         //store data into global variables
         tripsDataset = outputData;
-        let zoneToDistrict = getZoneToDistrict(DistrictVSZone);
-        popEmpDataset = convertCSVData(popEmpData,zoneToDistrict);
-        populationBreakdown = convertCSVData(popBreak,zoneToDistrict);
-        dwellingTypeDataset = convertCSVData(dwellingData,zoneToDistrict);
+        let zoneToDistrictDict = getZoneToDistrict(DistrictVSZone);
+        popEmpDataset = convertCSVData(popEmpData,zoneToDistrictDict);
+        populationBreakdown = convertCSVData(popBreak,zoneToDistrictDict);
+        dwellingTypeDataset = convertCSVData(dwellingData,zoneToDistrictDict);
 
         let map = new Map("mapDiv", {
             basemap: "gray-vector",
@@ -60,6 +63,7 @@ require([
             zoom: 8,
             minZoom:6,
         });
+
         //travel zone layer
         let DistrictLayer = new FeatureLayer("https://services8.arcgis.com/FCQ1UtL7vfUUEwH7/arcgis/rest/services/district1669/FeatureServer/0",{
             mode: FeatureLayer.MODE_SNAPSHOT,
@@ -393,15 +397,59 @@ require([
             //automatically click drilldown back button
             $('.highcharts-drillup-button').click();
             //update dwelling chart data
-            dwellingChart.series[0].setData(getKeysValuesOfObject(dwellingTypeDataset[selectedZone])[1]);
-            dwellingChart.xAxis[0].setCategories(getKeysValuesOfObject(dwellingTypeDataset[selectedZone])[0]);
-            if(dwellingChart.yAxis[0].getExtremes().dataMax === 0){
-                dwellingChart.yAxis[0].setExtremes(0,10);
-            }
-            else{
-                dwellingChart.yAxis[0].setExtremes();
-            }
+            updateDwellingChart(selectedZone);
+            //update travel mode chart
+            updateTravelModeChart(selectedZone);
             //update autoOwnerShip chart
+            updateAutoOwnershipChart(selectedZone);
+            //update income chart data
+            updateIncomeChart(selectedZone);
+            //update HHSize chart data
+            updateHHChart(selectedZone);
+            //update trips by purpose chart's data
+            updateTripByPurposeChart(selectedZone);
+            //update four bullet charts
+            updateBulletChart();
+        }
+        function updateTripByPurposeChart(selectedZone){
+            let tripsByPurposeArray = [];
+            for(let i in tripsDataset[selectedZone]['TourPurp']){
+                tripsByPurposeArray.push({'name':purposeDict[i],'y':tripsDataset[selectedZone]['TourPurp'][i],'drilldown':i})
+            }
+            tripsByPurposeChart.xAxis[0].setCategories(getCategoriesOfDistByPurp(tripsDataset[selectedZone]['TourDistByPurp']));
+            //update drilldown data of trips by purpose chart
+            tripsByPurposeChart.options.drilldown.series = generateDrilldownSeries(tripsDataset[selectedZone]['TourDistByPurp']);
+            tripsByPurposeChart.series[0].setData(tripsByPurposeArray);
+        }
+        function updateHHChart(selectedZone){
+            let HHSizeArray = [];
+            let HHlargerThanFive = 0;
+            for(let i in tripsDataset[selectedZone]['HHSize']){
+                //combine the value of 5+ condition
+                if(Number(i)>=5){
+                    HHlargerThanFive+=tripsDataset[selectedZone]['HHSize'][i];
+                }
+                else{
+                    HHSizeArray.push([i,tripsDataset[selectedZone]['HHSize'][i]])
+                }
+            }
+            HHSizeArray.push(['5+',HHlargerThanFive]);//add 5+ data to the autoArray
+            HHChart.series[0].setData(HHSizeArray);
+            HHChart.xAxis[0].setCategories(getKeysValuesOfTripsObject(HHSizeArray)[0])
+            //update trips by purpose chart data
+        }
+        function updateIncomeChart(selectedZone){
+            let incomeSum=0;
+            for (let i in tripsDataset[selectedZone]['IncGrp']){
+                incomeSum += tripsDataset[selectedZone]['IncGrp'][i];
+            }
+            let incomeArray = [];
+            for(let i in tripsDataset[selectedZone]['IncGrp']){
+                incomeArray.push([incomeDict[i],tripsDataset[selectedZone]['IncGrp'][i]*100/incomeSum]);
+            }
+            incomeChart.series[0].setData(incomeArray);
+        }
+        function updateAutoOwnershipChart(selectedZone){
             let autoArray= [];
             let largerThanFive = 0;
             if(typeof(tripsDataset[selectedZone])=== 'undefined'){
@@ -423,42 +471,17 @@ require([
             autoOwnershipChart.series[0].setData(getKeysValuesOfTripsObject(autoArray)[1]);
             autoOwnershipChart.xAxis[0].setCategories(getKeysValuesOfTripsObject(autoArray)[0]);
             updateTravelModeChart(selectedZone);
-            //update income chart data
-            let incomeSum=0;
-            for (let i in tripsDataset[selectedZone]['IncGrp']){
-                incomeSum += tripsDataset[selectedZone]['IncGrp'][i];
-            }
-            let incomeArray = [];
-            for(let i in tripsDataset[selectedZone]['IncGrp']){
-                incomeArray.push([incomeDict[i],tripsDataset[selectedZone]['IncGrp'][i]*100/incomeSum]);
-            }
-            incomeChart.series[0].setData(incomeArray);
 
-            //update HHSize chart data
-            let HHSizeArray = [];
-            let HHlargerThanFive = 0;
-            for(let i in tripsDataset[selectedZone]['HHSize']){
-                //combine the value of 5+ condition
-                if(Number(i)>=5){
-                    HHlargerThanFive+=tripsDataset[selectedZone]['HHSize'][i];
-                }
-                else{
-                    HHSizeArray.push([i,tripsDataset[selectedZone]['HHSize'][i]])
-                }
+        }
+        function updateDwellingChart(selectedZone){
+            dwellingChart.series[0].setData(getKeysValuesOfObject(dwellingTypeDataset[selectedZone])[1]);
+            dwellingChart.xAxis[0].setCategories(getKeysValuesOfObject(dwellingTypeDataset[selectedZone])[0]);
+            if(dwellingChart.yAxis[0].getExtremes().dataMax === 0){
+                dwellingChart.yAxis[0].setExtremes(0,10);
             }
-            HHSizeArray.push(['5+',HHlargerThanFive]);//add 5+ data to the autoArray
-            HHChart.series[0].setData(HHSizeArray);
-            HHChart.xAxis[0].setCategories(getKeysValuesOfTripsObject(HHSizeArray)[0])
-            //update trips by purpose chart data
-            let tripsByPurposeArray = [];
-            for(let i in tripsDataset[selectedZone]['TourPurp']){
-                tripsByPurposeArray.push({'name':purposeDict[i],'y':tripsDataset[selectedZone]['TourPurp'][i],'drilldown':i})
+            else{
+                dwellingChart.yAxis[0].setExtremes();
             }
-            tripsByPurposeChart.xAxis[0].setCategories(getCategoriesOfDistByPurp(tripsDataset[selectedZone]['TourDistByPurp']));
-            //update drilldown data of trips by purpose chart
-            tripsByPurposeChart.options.drilldown.series = generateDrilldownSeries(tripsDataset[selectedZone]['TourDistByPurp']);
-            tripsByPurposeChart.series[0].setData(tripsByPurposeArray);
-            updateBulletChart();
         }
         function updateTravelModeChart(selectedZone){
             if(professionalTravelModeChart === false){
@@ -630,7 +653,7 @@ function updateBulletChart(){
             $('#totalPop').hide();
             let distByPurpose = [];
             for(let purp in tripsDataset[selectedZone]['TourPurp']){
-                distByPurpose.push([purposeDict[purp],tripsDataset[selectedZone]['Dist'][purp]/tripsDataset[selectedZone]['Person#'][purp]])
+                distByPurpose.push([purposeDict[purp],tripsDataset[selectedZone]['Dist'][purp]/tripsDataset[selectedZone]['TourPurp'][purp]])
             }
             //update the avgDist chart to a dist by purpose
             let drillDownDistChart = Highcharts.chart('avgDist', {
